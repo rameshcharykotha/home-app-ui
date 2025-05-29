@@ -19,6 +19,9 @@ import UpdateInvestment from './components/Investments/UpdateInvestment';
 import SavingsList from './components/Savings/SavingsList';
 import CreateSaving from './components/Savings/CreateSaving';
 import UpdateSaving from './components/Savings/UpdateSaving';
+import EventList from './components/Events/EventList';
+import CreateEvent from './components/Events/CreateEvent';
+import UpdateEvent from './components/Events/UpdateEvent';
 import './App.css';
 
 const App = () => {
@@ -46,6 +49,10 @@ const App = () => {
                             <Route path="/savings" element={<SavingsList />} />
                             <Route path="/create-saving" element={<CreateSaving />} />
                             <Route path="/update-saving/:id" element={<UpdateSaving />} />
+                            {/* Event Routes */}
+                            <Route path="/events" element={<EventList />} />
+                            <Route path="/create-event" element={<CreateEvent />} />
+                            <Route path="/update-event/:id" element={<UpdateEvent />} />
                         </Routes>
                     </div>
                 </div>
