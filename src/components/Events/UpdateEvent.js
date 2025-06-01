@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // To get URL parameters
-// import { useNavigate } from 'react-router-dom'; // Uncomment if needed for redirecting
+import { useParams, useNavigate } from 'react-router-dom'; // To get URL parameters and for redirecting
+import { getEventById, updateEvent } from '../../services/EventService';
 
 const UpdateEvent = () => {
     const { id: eventId } = useParams(); // Get event ID from URL path
@@ -8,71 +8,68 @@ const UpdateEvent = () => {
     const [eventDate, setEventDate] = useState('');
     const [eventLocation, setEventLocation] = useState('');
     const [eventDescription, setEventDescription] = useState('');
-    // const navigate = useNavigate(); // For redirecting
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate(); // For redirecting
 
     useEffect(() => {
-        console.log('Attempting to fetch event with ID:', eventId);
-        // TODO: Fetch event data from API using eventId
-        // Example:
-        // fetch(`/api/events/${eventId}`)
-        //     .then(response => {
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then(data => {
-        //         setEventName(data.name);
-        //         setEventDate(data.date.split('T')[0]); // Assuming date is ISO string e.g. 2023-01-01T12:00:00Z
-        //         setEventLocation(data.location);
-        //         setEventDescription(data.description);
-        //     })
-        //     .catch(error => console.error('Error fetching event details:', error));
-
-        // For now, let's set some dummy data as if fetched
-        if (eventId) { // Check if eventId is available
-            setEventName(`Event ${eventId} Name (Fetched)`);
-            // Ensure date is in 'YYYY-MM-DD' format for the input type="date"
-            const dummyDate = new Date();
-            dummyDate.setDate(dummyDate.getDate() + parseInt(eventId || "0", 10)); // Vary date for different IDs
-            const year = dummyDate.getFullYear();
-            const month = (dummyDate.getMonth() + 1).toString().padStart(2, '0');
-            const day = dummyDate.getDate().toString().padStart(2, '0');
-            setEventDate(`${year}-${month}-${day}`);
-            setEventLocation(`Location for Event ${eventId} (Fetched)`);
-            setEventDescription(`This is a detailed description for Event ${eventId}. (Fetched)`);
+        if (!eventId) {
+            setLoading(false);
+            setError("Event ID is missing.");
+            return;
         }
+
+        const fetchEventDetails = async () => {
+            setLoading(true);
+            try {
+                const data = await getEventById(eventId);
+                setEventName(data.name);
+                // Assuming data.date is in ISO format 'YYYY-MM-DDTHH:mm:ssZ' or 'YYYY-MM-DD'
+                // The input type="date" expects 'YYYY-MM-DD'
+                setEventDate(data.date ? data.date.split('T')[0] : '');
+                setEventLocation(data.location || '');
+                setEventDescription(data.description || '');
+                setError(null);
+            } catch (err) {
+                console.error('Error fetching event details:', err);
+                setError(err.message || `Failed to fetch event details for ID ${eventId}.`);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchEventDetails();
     }, [eventId]); // Re-run effect if eventId changes
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null); // Clear previous errors
         const updatedEventData = {
-            id: eventId, // Make sure to include the id of the event being updated
+            // id: eventId, // Not needed in the body if it's in the URL for PUT
             name: eventName,
             date: eventDate,
             location: eventLocation,
             description: eventDescription,
         };
-        console.log('Updated event data to submit:', updatedEventData);
-        alert(`Event update form submitted for ID: ${eventId}! Check console for data. API call pending.`);
-        // TODO: Send updatedEventData to API (e.g., PUT /api/events/:eventId)
-        // Example:
-        // fetch(`/api/events/${eventId}`, {
-        //     method: 'PUT',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(updatedEventData),
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log('Event updated successfully:', data);
-        //     // navigate('/events'); // Redirect to event list or event detail page
-        // })
-        // .catch(error => console.error('Error updating event:', error));
+
+        try {
+            await updateEvent(eventId, updatedEventData);
+            navigate('/events'); // Redirect to event list
+        } catch (err) {
+            console.error('Error updating event:', err);
+            setError(err.message || `Failed to update event ID ${eventId}. Please try again.`);
+            // Keep alert for error, or use a more sophisticated error display
+            alert(`Error: ${err.message || `Failed to update event ID ${eventId}.`}`);
+        }
     };
+
+    if (loading) return <p>Loading event details...</p>;
+    if (error && !eventName) return <p>Error: {error}</p>; // Show error prominently if event data couldn't be loaded
 
     return (
         <div>
             <h2>Update Event (ID: {eventId})</h2>
+            {error && <p style={{ color: 'red' }}>Error during update: {error}</p>}
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
                 <div>
                     <label htmlFor="eventName" style={{ display: 'block', marginBottom: '5px' }}>Event Name:</label>
