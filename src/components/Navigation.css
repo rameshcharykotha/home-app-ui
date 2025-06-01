@@ -1,0 +1,76 @@
+.nav {
+    width: 200px;
+    background-color: #0056b3; /* Blueish background color */
+    color: #fff;
+    height: calc(100vh - 60px); /* Adjust to match the height of the header */
+    position: fixed;
+    top: 60px; /* Adjust to match the height of the header */
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    z-index: 1000; /* Ensure it stays above the main content */
+}
+
+.nav-list {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+
+.nav-item {
+    width: 100%;
+}
+
+.nav-link {
+    display: block;
+    color: #fff;
+    text-decoration: none;
+    padding: 15px 20px;
+    width: 100%;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+    background-color: #004080; /* Darker blue on hover */
+}
+
+.navigation {
+    background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
+    width: 200px;
+    padding: 20px;
+    position: fixed;
+    top: 81px; /* Adjust this value to match the height of your header */
+    bottom: 60px; /* Adjust this value to match the height of your footer */
+    overflow-y: auto;
+    z-index: 900; /* Ensure it stays below the header and footer */
+}
+
+.navigation ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.navigation li {
+    margin-bottom: 10px;
+}
+
+.navigation a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.navigation a:hover,
+.navigation a.active {
+    background-color: rgba(0, 0, 0, 0.5);
+}
