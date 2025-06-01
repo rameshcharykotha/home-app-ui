@@ -54,3 +54,105 @@
     padding-bottom: 10px;
     margin-top: 0;
 }
+
+/* Basic Styling for Event Components */
+
+/* Container for event list and forms */
+.event-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.event-container h2 {
+    margin-top: 0;
+    color: #333;
+}
+
+/* Styling for event list items */
+.event-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.event-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.event-list h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.event-list p {
+    margin-bottom: 3px;
+}
+
+/* Styling for event forms (CreateEvent, UpdateEvent) */
+.event-form div {
+    margin-bottom: 15px;
+}
+
+.event-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.event-form input[type="text"],
+.event-form input[type="date"],
+.event-form textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+}
+
+.event-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.event-form button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.event-form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Action buttons in list or forms */
+.action-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    text-decoration: none; /* If using Link styled as button */
+}
+
+.action-button:hover {
+    background-color: #545b62;
+}
+
+.action-button.delete {
+    background-color: #dc3545;
+}
+
+.action-button.delete:hover {
+    background-color: #c82333;
+}
