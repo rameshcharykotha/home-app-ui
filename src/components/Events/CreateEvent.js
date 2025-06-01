@@ -1,47 +1,46 @@
 import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom'; // Uncomment if needed for redirecting after creation
+import { useNavigate } from 'react-router-dom'; // Uncomment if needed for redirecting after creation
+import { createEvent } from '../../services/EventService';
 
 const CreateEvent = () => {
     const [eventName, setEventName] = useState('');
     const [eventDate, setEventDate] = useState('');
     const [eventLocation, setEventLocation] = useState('');
     const [eventDescription, setEventDescription] = useState('');
-    // const navigate = useNavigate(); // For redirecting
+    const [error, setError] = useState(null); // For displaying API errors
+    const navigate = useNavigate(); // For redirecting
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        setError(null); // Clear previous errors
         const eventData = {
             name: eventName,
             date: eventDate,
             location: eventLocation,
             description: eventDescription,
         };
-        console.log('Event data to submit:', eventData);
-        alert('Event creation form submitted! Check console for data. API call pending.');
-        // TODO: Send eventData to API
-        // Example:
-        // fetch('/api/events', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(eventData),
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log('Event created:', data);
-        //     // navigate('/events'); // Redirect to event list
-        // })
-        // .catch(error => console.error('Error creating event:', error));
 
-        // Clear form (optional)
-        setEventName('');
-        setEventDate('');
-        setEventLocation('');
-        setEventDescription('');
+        try {
+            const newEvent = await createEvent(eventData);
+            console.log('Event created:', newEvent);
+            // Clear form
+            setEventName('');
+            setEventDate('');
+            setEventLocation('');
+            setEventDescription('');
+            navigate('/events'); // Redirect to event list
+        } catch (err) {
+            console.error('Error creating event:', err);
+            setError(err.message || 'Failed to create event. Please try again.');
+            // Keep alert for error, or use a more sophisticated error display
+            alert(`Error: ${err.message || 'Failed to create event.'}`);
+        }
     };
 
     return (
         <div>
             <h2>Create New Event</h2>
+            {error && <p style={{ color: 'red' }}>Error: {error}</p>}
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px', maxWidth: '400px' }}>
                 <div>
                     <label htmlFor="eventName" style={{ display: 'block', marginBottom: '5px' }}>Event Name:</label>
